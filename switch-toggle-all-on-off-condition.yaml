@@ -1,0 +1,20 @@
+# If all lights are off, turn them on. Otherwise, turn them off.
+# Description: 
+# 1. The first condition checks if all lights are off. If this condition is true, it turns on all lights.
+# 2. If not all lights are off (i.e., any light is on), it proceeds to the default block, which turns off all lights.
+#
+# Replace entity name light.mqtt_kontor with you own light group
+choose:
+  - conditions:
+      # Check if all lights in the group are off
+      - condition: template
+        value_template: >
+          {{ expand('light.mqtt_kontor') | selectattr('state', 'eq', 'off') | list | count == expand('light.mqtt_kontor') | list | count }}
+    sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.mqtt_kontor
+default:
+  - service: light.turn_off
+    target:
+      entity_id: light.mqtt_kontor
