@@ -1,4 +1,5 @@
 # Used when click on button
+# Change mqtt_kontor to your own entity (light group)
 alias: brightness steps
 service: light.turn_on
 target:
