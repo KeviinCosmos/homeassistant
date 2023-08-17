@@ -1,16 +1,17 @@
+# Used when click on button
 alias: brightness steps
 service: light.turn_on
 target:
-  entity_id: light.your_entity_group
+  entity_id: light.mqtt_kontor
 data:
   brightness: >
-    {% if is_state('light.your_entity_group', 'on') and
-    state_attr('light.your_entity_group', 'brightness') | int <=42 %}
+    {% if is_state('light.mqtt_kontor', 'on') and
+    state_attr('light.mqtt_kontor', 'brightness') | int <= 42 %}
       80
-    {% elif is_state('light.your_entity_group', 'on') and 43 <=
-    state_attr('light.your_entity_group', 'brightness') | int <=80 %}
+    {% elif is_state('light.mqtt_kontor', 'on') and 43 <=
+    state_attr('light.mqtt_kontor', 'brightness') | int <= 80 %}
       192
-    {% elif is_state('light.your_entity_group', 'on') and 81 <=
-    state_attr('light.your_entity_group', 'brightness') | int >=80 %}
+    {% elif is_state('light.mqtt_kontor', 'on') and 
+    state_attr('light.mqtt_kontor', 'brightness') | int >= 81 %}
       5
     {% endif %}
