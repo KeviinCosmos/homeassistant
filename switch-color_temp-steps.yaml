@@ -1,0 +1,18 @@
+# Used when held on button
+# Change mqtt_kontor to your own entity (light group)
+alias: color temp steps
+service: light.turn_on
+target:
+  entity_id: light.mqtt_kontor
+data:
+  color_temp: >
+    {% if is_state('light.mqtt_kontor', 'on') %}
+      {% set current_temp = state_attr('light.mqtt_kontor', 'color_temp') | int %}
+      {% if current_temp <= 222 %}
+        333
+      {% elif 222 < current_temp <= 333 %}
+        444
+      {% else %}
+        222
+      {% endif %}
+    {% endif %}
