@@ -26,30 +26,67 @@ blueprint:
           mode: box
           step: 10.0
     top_left_pressed:
-      name: 1. Top Left Pressed
-      default: []
-      selector:
-        action: {}
+      - alias: If all lights are off, turn them on. Otherwise, turn them off.
+        choose:
+          - conditions:
+              - condition: template
+                value_template: >
+                  {{ expand('light.kontor') | selectattr('state', 'eq', 'off') |
+                  list | count == expand('light.kontor') | list | count }}
+            sequence:
+              - service: light.turn_on
+                data: {}
+                target:
+                  entity_id: light.kontor
+        default:
+          - service: light.turn_off
+            data: {}
+            target:
+              entity_id: light.kontor
     top_left_held:
-      name: 1. Top Left Held
-      default: []
-      selector:
-        action: {}
+      - service: scene.turn_on
+        target:
+          entity_id: scene.kontor_lys_standard
+        metadata: {}
     top_left_released:
       name: 1. Top Left Released
       default: []
       selector:
         action: {}
     top_right_pressed:
-      name: 2. Top Right Pressed
-      default: []
-      selector:
-        action: {}
+      - alias: brightness steps
+        service: light.turn_on
+        target:
+          entity_id: light.kontor
+        data:
+          brightness: >
+            {% if is_state('light.kontor', 'on') and state_attr('light.kontor',
+            'brightness') | int <= 42 %}
+              120
+            {% elif is_state('light.kontor', 'on') and 43 <=
+            state_attr('light.kontor', 'brightness') | int <= 80 %}
+              255
+            {% elif is_state('light.kontor', 'on') and 
+            state_attr('light.kontor', 'brightness') | int >= 81 %}
+              40
+            {% endif %}
     top_right_held:
-      name: 2. Top Right Held
-      default: []
-      selector:
-        action: {}
+       - alias: color temp steps
+        service: light.turn_on
+        target:
+          entity_id: light.kontor
+        data:
+          color_temp: |
+            {% if is_state('light.kontor', 'on') %}
+              {% set current_temp = state_attr('light.kontor', 'color_temp') | int %}
+              {% if current_temp <= 222 %}
+                333
+              {% elif 222 < current_temp <= 333 %}
+                444
+              {% else %}
+                222
+              {% endif %}
+            {% endif %}
     top_right_released:
       name: 2. Top Right Released
       default: []
