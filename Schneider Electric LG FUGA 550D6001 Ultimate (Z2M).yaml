@@ -1,0 +1,154 @@
+# Clean blueprint
+blueprint:
+  name: Schneider Electric LG FUGA 550D6001 Ultimate (Z2M)
+  description: Break free and use the press/hold/release actions from all 4 buttons triggered by LK FUGA 550D6001 switch.
+  domain: automation
+  author: Keviin Cosmos
+  input:
+    controller_entity:
+      name: (Zigbee2MQTT) Controller Entity
+      description: The action sensor of the controller to use for the automation.
+      default: ""
+      selector:
+        entity:
+          domain:
+            - sensor
+          multiple: false
+    hold_delay:
+      name: Hold delay
+      description: If the button has been held more than the configured Hold delay, the corresponding held action is triggered.
+      default: 1000
+      selector:
+        number:
+          min: 100.0
+          max: 5000.0
+          unit_of_measurement: milliseconds
+          mode: box
+          step: 10.0
+    top_left_pressed:
+      name: 1. Top Left Pressed
+      default: []
+      selector:
+        action: {}
+    top_left_held:
+      name: 1. Top Left Held
+      default: []
+      selector:
+        action: {}
+    top_left_released:
+      name: 1. Top Left Released
+      default: []
+      selector:
+        action: {}
+    top_right_pressed:
+      name: 2. Top Right Pressed
+      default: []
+      selector:
+        action: {}
+    top_right_held:
+      name: 2. Top Right Held
+      default: []
+      selector:
+        action: {}
+    top_right_released:
+      name: 2. Top Right Released
+      default: []
+      selector:
+        action: {}
+    bottom_left_pressed:
+      name: 3. Bottom Left Pressed
+      default: []
+      selector:
+        action: {}
+    bottom_left_held:
+      name: 3. Bottom Left Held
+      default: []
+      selector:
+        action: {}
+    bottom_left_released:
+      name: 3. Bottom Left Released
+      default: []
+      selector:
+        action: {}
+    bottom_right_pressed:
+      name: 4. Bottom Right Pressed
+      default: []
+      selector:
+        action: {}
+    bottom_right_held:
+      name: 4. Bottom Right Held
+      default: []
+      selector:
+        action: {}
+    bottom_right_released:
+      name: 4. Bottom Right Released
+      default: []
+      selector:
+        action: {}
+  source_url: https://community.home-assistant.io/t/schneider-electric-lg-fuga-550d6001-ultimate-z2m/618022
+mode: single
+max_exceeded: silent
+trigger:
+  - platform: event
+    event_type: state_changed
+    event_data:
+      entity_id: !input controller_entity
+action:
+  - variables:
+      trigger_action: "{{ trigger.event.data.new_state.state }}"
+  - choose:
+      # Top Left Button
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'on_top' }}"
+        sequence: !input top_left_pressed
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'brightness_move_up_top' }}"
+        sequence: !input top_left_held
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'brightness_stop_top' }}"
+        sequence: !input top_left_released
+
+      # Top Right Button
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'off_top' }}"
+        sequence: !input top_right_pressed
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'brightness_move_down_top' }}"
+        sequence: !input top_right_held
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'brightness_stop_top' }}"
+        sequence: !input top_right_released
+
+      # Bottom Left Button
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'on_bottom' }}"
+        sequence: !input bottom_left_pressed
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'brightness_move_up_bottom' }}"
+        sequence: !input bottom_left_held
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'brightness_stop_bottom' }}"
+        sequence: !input bottom_left_released
+
+      # Bottom Right Button
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'off_bottom' }}"
+        sequence: !input bottom_right_pressed
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'brightness_move_down_bottom' }}"
+        sequence: !input bottom_right_held
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger_action == 'brightness_stop_bottom' }}"
+        sequence: !input bottom_right_released
