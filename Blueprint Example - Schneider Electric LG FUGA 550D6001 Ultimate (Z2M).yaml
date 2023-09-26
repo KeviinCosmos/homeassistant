@@ -54,39 +54,13 @@ blueprint:
       selector:
         action: {}
     top_right_pressed:
-      - alias: brightness steps
-        service: light.turn_on
-        target:
-          entity_id: light.kontor
+      - service: script.brightness_steps
         data:
-          brightness: >
-            {% if is_state('light.kontor', 'on') and state_attr('light.kontor',
-            'brightness') | int <= 42 %}
-              120
-            {% elif is_state('light.kontor', 'on') and 43 <=
-            state_attr('light.kontor', 'brightness') | int <= 80 %}
-              255
-            {% elif is_state('light.kontor', 'on') and 
-            state_attr('light.kontor', 'brightness') | int >= 81 %}
-              40
-            {% endif %}
+          entity: light.kontor
     top_right_held:
-       - alias: color temp steps
-        service: light.turn_on
-        target:
-          entity_id: light.kontor
+       - service: script.color_temp_steps
         data:
-          color_temp: |
-            {% if is_state('light.kontor', 'on') %}
-              {% set current_temp = state_attr('light.kontor', 'color_temp') | int %}
-              {% if current_temp <= 222 %}
-                333
-              {% elif 222 < current_temp <= 333 %}
-                444
-              {% else %}
-                222
-              {% endif %}
-            {% endif %}
+          entity: light.kontor
     top_right_released:
       name: 2. Top Right Released
       default: []
