@@ -1,16 +1,27 @@
-# Used when click on button
-# Change mqtt_kontor to your own entity (light group)
-alias: brightness steps
-service: light.turn_on
-target:
-  entity_id: light.kontor
-data:
-  brightness: >
-    {% set light_entity = 'light.kontor' %}
-    {% if is_state(light_entity, 'on') and state_attr(light_entity, 'brightness') | int <= 42 %}
-      160
-    {% elif is_state(light_entity, 'on') and 43 <= state_attr(light_entity, 'brightness') | int <= 160 %}
-      255
-    {% elif is_state(light_entity, 'on') and state_attr(light_entity, 'brightness') | int >= 161 %}
-      40
-    {% endif %}
+### BRIGHTNESS STEPS ###
+# How to use in an automation
+# 1. Choose any action you want and click edit with yaml
+# 2. Paste the below and change choise of light entity
+#
+#- service: script.brightness_steps
+#  data:
+#   entity: light.kontor
+#
+brightness_steps:
+  alias: "Brightness Steps"
+  fields:
+    entity:
+      description: "The entity to control"
+      example: "light.kontor"
+  sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity }}"
+        brightness: >
+          {% if is_state(entity, 'on') and state_attr(entity, 'brightness') | int <= 42 %}
+            160
+          {% elif is_state(entity, 'on') and 43 <= state_attr(entity, 'brightness') | int <= 160 %}
+            255
+          {% elif is_state(entity, 'on') and state_attr(entity, 'brightness') | int >= 161 %}
+            40
+          {% endif %}
