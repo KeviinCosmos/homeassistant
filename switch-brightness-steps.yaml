@@ -3,16 +3,14 @@
 alias: brightness steps
 service: light.turn_on
 target:
-  entity_id: light.mqtt_kontor
+  entity_id: light.kontor
 data:
   brightness: >
-    {% if is_state('light.mqtt_kontor', 'on') and
-    state_attr('light.mqtt_kontor', 'brightness') | int <= 42 %}
-      80
-    {% elif is_state('light.mqtt_kontor', 'on') and 43 <=
-    state_attr('light.mqtt_kontor', 'brightness') | int <= 80 %}
-      192
-    {% elif is_state('light.mqtt_kontor', 'on') and 
-    state_attr('light.mqtt_kontor', 'brightness') | int >= 81 %}
-      5
+    {% set light_entity = 'light.kontor' %}
+    {% if is_state(light_entity, 'on') and state_attr(light_entity, 'brightness') | int <= 42 %}
+      160
+    {% elif is_state(light_entity, 'on') and 43 <= state_attr(light_entity, 'brightness') | int <= 160 %}
+      255
+    {% elif is_state(light_entity, 'on') and state_attr(light_entity, 'brightness') | int >= 161 %}
+      40
     {% endif %}
