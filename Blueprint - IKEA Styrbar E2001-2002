@@ -1,0 +1,111 @@
+# Clean Blueprint
+blueprint:
+  name: E2001_E2002 Switch Actions (Z2M)
+  description: Define actions for press and hold on all four buttons of the E2001_E2002 switch.
+  domain: automation
+  author: Keviin Cosmos
+  input:
+    controller_entity:
+      name: (Zigbee2MQTT) Controller Entity
+      description: The action sensor of the controller to use for the automation.
+      default: ""
+      selector:
+        entity:
+          domain:
+            - sensor
+          multiple: false
+    hold_delay:
+      name: Hold delay
+      description: If the button has been held more than the configured Hold delay, the corresponding held action is triggered.
+      default: 1000
+      selector:
+        number:
+          min: 100.0
+          max: 5000.0
+          unit_of_measurement: milliseconds
+          mode: box
+          step: 10.0
+    light_large_push:
+      name: Light Large (Top) Pushed
+      default: []
+      selector:
+        action: {}
+    light_large_hold:
+      name: Light Large (Top) Held
+      default: []
+      selector:
+        action: {}
+    light_small_push:
+      name: Light Small (Bottom) Pushed
+      default: []
+      selector:
+        action: {}
+    light_small_hold:
+      name: Light Small (Bottom) Held
+      default: []
+      selector:
+        action: {}
+    arrow_left_push:
+      name: Arrow Left Pushed
+      default: []
+      selector:
+        action: {}
+    arrow_left_hold:
+      name: Arrow Left Held
+      default: []
+      selector:
+        action: {}
+    arrow_right_push:
+      name: Arrow Right Pushed
+      default: []
+      selector:
+        action: {}
+    arrow_right_hold:
+      name: Arrow Right Held
+      default: []
+      selector:
+        action: {}
+
+mode: single
+max_exceeded: silent
+trigger:
+  - platform: event
+    event_type: state_changed
+    event_data:
+      entity_id: !input controller_entity
+action:
+  - variables:
+      trigger_action: "{{ trigger.event.data.new_state.state }}"
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger_action == "on" }}'
+        sequence: !input light_large_push
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger_action == "brightness_move_up" }}'
+        sequence: !input light_large_hold
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger_action == "off" }}'
+        sequence: !input light_small_push
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger_action == "brightness_move_down" }}'
+        sequence: !input light_small_hold
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger_action == "arrow_left_click" }}'
+        sequence: !input arrow_left_push
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger_action == "arrow_left_hold" }}'
+        sequence: !input arrow_left_hold
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger_action == "arrow_right_click" }}'
+        sequence: !input arrow_right_push
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger_action == "arrow_right_hold" }}'
+        sequence: !input arrow_right_hold
