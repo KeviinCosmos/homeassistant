@@ -1,6 +1,6 @@
 # Clean Blueprint
 blueprint:
-  name: E2001_E2002 Switch Actions (Z2M)
+  name: IKEA Styrbar - E2001_E2002 Switch Actions (Z2M)
   description: Define actions for press and hold on all four buttons of the E2001_E2002 switch.
   domain: automation
   author: Keviin Cosmos
@@ -65,7 +65,7 @@ blueprint:
       default: []
       selector:
         action: {}
-
+  source_url: https://community.home-assistant.io/t/ikea-styrbar-e2001-2002-ultimate-zigbee2mqtt-z2m/625090
 mode: single
 max_exceeded: silent
 trigger:
