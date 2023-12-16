@@ -1,1 +1,84 @@
-p
+type: vertical-stack
+title: Presence Sensor Card 
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: entities
+        entities:
+          - entity: switch.diy_sensor_1_radar_engineering_mode
+            name: engineering mode
+  - type: vertical-stack
+    cards:
+      - type: entities
+        entities:
+          - entity: number.diy_sensor_1_radar_timeout
+            name: timeout
+          - entity: number.diy_sensor_1_radar_max_move_distance
+            name: max move distance gate
+          - entity: number.diy_sensor_1_radar_max_still_distance
+            name: max still distance gate
+          - entity: select.diy_sensor_1_light_function
+            name: light function
+          - entity: number.diy_sensor_1_light_threshold
+            name: light threshold
+      - type: horizontal-stack
+        cards:
+          - type: entity
+            entity: sensor.diy_sensor_1_radar_detection_distance
+            name: Distance
+          - type: entity
+            entity: sensor.diy_sensor_1_radar_moving_distance
+            name: Move
+          - type: entity
+            entity: sensor.diy_sensor_1_radar_still_distance
+            name: Still
+  - type: horizontal-stack
+    cards:
+      - type: entity
+        entity: number.diy_sensor_1_radar_end_zone_1
+        name: Zone 1 End
+      - type: entity
+        entity: number.diy_sensor_1_radar_end_zone_2
+        name: Zone 2 End
+      - type: entity
+        entity: number.diy_sensor_1_radar_end_zone_3
+        name: Zone 3 End
+  - type: horizontal-stack
+    cards:
+      - type: entity
+        entity: binary_sensor.diy_sensor_1_radar_zone_1_occupancy
+        name: Zone 1
+      - type: entity
+        entity: binary_sensor.diy_sensor_1_radar_zone_2_occupancy
+        name: Zone 2
+      - type: entity
+        entity: binary_sensor.diy_sensor_1_radar_zone_3_occupancy
+        name: Zone 3
+  - type: horizontal-stack
+    cards:
+      - type: entity
+        entity: sensor.diy_sensor_1_radar_move_energy
+        name: Move energy
+      - type: entity
+        entity: sensor.diy_sensor_1_radar_still_energy
+        name: Still energy
+  - type: horizontal-stack
+    cards:
+      - type: entity
+        entity: binary_sensor.diy_sensor_1_gpio_out_pin_presence
+        name: GPIO Presence
+        state_color: true
+      - type: entity
+        entity: binary_sensor.diy_sensor_1_presence
+        name: Presence
+        state_color: true
+  - type: horizontal-stack
+    cards:
+      - type: entity
+        entity: binary_sensor.diy_sensor_1_radar_moving_target
+        name: Movement
+        state_color: true
+      - type: entity
+        entity: binary_sensor.diy_sensor_1_radar_still_target
+        name: Still
+        state_color: true
