@@ -1,3 +1,19 @@
+##########################################################################################################################################
+# REMOVE ALL THIS - IT'S ONLY INFORMATION ON THE PRODUCT
+#
+# My devices are:
+# ESP32 super mini: https://www.aliexpress.com/item/1005005757810089.html?spm=a2g0o.order_list.order_list_main.57.2c0c1802RbDi9G
+# HLK-LD2410C: https://www.aliexpress.com/item/1005005270890564.html?spm=a2g0o.order_list.order_list_main.23.2c0c1802RbDi9G
+#
+# Boards connected: https://i.imgur.com/MgdKebP.jpeg
+#
+# Screenshot:
+# Device: https://i.imgur.com/i8GMVa1.png
+# Dashboard: https://i.imgur.com/3naEfJP.png
+# ESP Home Yaml: https://github.com/KeviinCosmos/homeassistant/blob/master/presence-sensor-esp32c3-ld2410c.yaml
+##########################################################################################################################################
+
+
 # DIY Presence Sensor - ESP32C# + LP2410C
 substitutions:
   name: diy-sensor-1
