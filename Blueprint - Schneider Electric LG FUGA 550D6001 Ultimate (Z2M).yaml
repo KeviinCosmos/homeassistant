@@ -1,23 +1,32 @@
 # Clean blueprint
 blueprint:
-  name: Schneider Electric LG FUGA 550D6001 Ultimate (Z2M)
-  description: Break free and use the press/hold/release actions from all 4 buttons triggered by LK FUGA 550D6001 switch.
+  name: Schneider Electric (Wiser) LG FUGA 550D6001 Ultimate (Z2M 2.X) [MQTT Device Trigger]
+  description: >
+    Uses MQTT device triggers (Z2M 2.X) for all 4 buttons (press, hold, release) 
+    of a Schneider Electric (Wiser) LG FUGA 550D6001 Ultimate switch.
   domain: automation
   author: Keviin Cosmos
+
   input:
-    controller_entity:
-      name: (Zigbee2MQTT) Controller Entity
-      description: The action sensor of the controller to use for the automation.
-      default: ""
+    #
+    # 1) ZIGBEE DEVICE SELECTOR
+    #
+    zigbee_device:
+      name: Zigbee2MQTT device
+      description: The Schneider Electric LG FUGA device exposed by Zigbee2MQTT
       selector:
-        entity:
-          domain:
-            - sensor
-          multiple: false
+        device:
+          integration: mqtt
+
+    #
+    # 2) OPTIONAL HOLD DELAY
+    #
     hold_delay:
       name: Hold delay
-      description: If the button has been held more than the configured Hold delay, the corresponding held action is triggered.
-      default: 1000
+      description: >
+        If the button has been held longer than this delay, the corresponding
+        "held" action triggers. (Optional if your device supports it.)
+      default: 500
       selector:
         number:
           min: 100.0
@@ -25,130 +34,243 @@ blueprint:
           unit_of_measurement: milliseconds
           mode: box
           step: 10.0
+
+    #
+    # 3) ACTIONS FOR EACH BUTTON EVENT
+    #
     top_left_pressed:
-      name: 1. Top Left Pressed
+      name: 1. Top Left Pressed (on_top)
       default: []
       selector:
         action: {}
+
     top_left_held:
-      name: 1. Top Left Held
+      name: 1. Top Left Held (brightness_move_up_top)
       default: []
       selector:
         action: {}
+
     top_left_released:
-      name: 1. Top Left Released
+      name: 1. Top Left Released (brightness_stop_top)
       default: []
       selector:
         action: {}
+
     top_right_pressed:
-      name: 2. Top Right Pressed
+      name: 2. Top Right Pressed (off_top)
       default: []
       selector:
         action: {}
+
     top_right_held:
-      name: 2. Top Right Held
+      name: 2. Top Right Held (brightness_move_down_top)
       default: []
       selector:
         action: {}
+
     top_right_released:
-      name: 2. Top Right Released
+      name: 2. Top Right Released (brightness_stop_top)
       default: []
       selector:
         action: {}
+
     bottom_left_pressed:
-      name: 3. Bottom Left Pressed
+      name: 3. Bottom Left Pressed (on_bottom)
       default: []
       selector:
         action: {}
+
     bottom_left_held:
-      name: 3. Bottom Left Held
+      name: 3. Bottom Left Held (brightness_move_up_bottom)
       default: []
       selector:
         action: {}
+
     bottom_left_released:
-      name: 3. Bottom Left Released
+      name: 3. Bottom Left Released (brightness_stop_bottom)
       default: []
       selector:
         action: {}
+
     bottom_right_pressed:
-      name: 4. Bottom Right Pressed
+      name: 4. Bottom Right Pressed (off_bottom)
       default: []
       selector:
         action: {}
+
     bottom_right_held:
-      name: 4. Bottom Right Held
+      name: 4. Bottom Right Held (brightness_move_down_bottom)
       default: []
       selector:
         action: {}
+
     bottom_right_released:
-      name: 4. Bottom Right Released
+      name: 4. Bottom Right Released (brightness_stop_bottom)
       default: []
       selector:
         action: {}
-  source_url: https://community.home-assistant.io/t/schneider-electric-lg-fuga-550d6001-ultimate-z2m/618022
-mode: single
-max_exceeded: silent
+
+#
+# TRIGGERS (MQTT DEVICE TRIGGERS)
+# Each trigger is a “device trigger” from the MQTT integration in Home Assistant.
+# The “id” field is used to match which input sequence to run in the choose/action below.
+#
 trigger:
-  - platform: event
-    event_type: state_changed
-    event_data:
-      entity_id: !input controller_entity
+  # -------------------------
+  # TOP LEFT
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: on_top
+    id: top_left_pressed
+
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: brightness_move_up_top
+    id: top_left_held
+
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: brightness_stop_top
+    id: top_left_released
+
+  # -------------------------
+  # TOP RIGHT
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: off_top
+    id: top_right_pressed
+
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: brightness_move_down_top
+    id: top_right_held
+
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: brightness_stop_top
+    id: top_right_released
+
+  # -------------------------
+  # BOTTOM LEFT
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: on_bottom
+    id: bottom_left_pressed
+
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: brightness_move_up_bottom
+    id: bottom_left_held
+
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: brightness_stop_bottom
+    id: bottom_left_released
+
+  # -------------------------
+  # BOTTOM RIGHT
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: off_bottom
+    id: bottom_right_pressed
+
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: brightness_move_down_bottom
+    id: bottom_right_held
+
+  - platform: device
+    device_id: !input zigbee_device
+    domain: mqtt
+    type: action
+    subtype: brightness_stop_bottom
+    id: bottom_right_released
+
+#
+# ACTIONS
+# We match on the trigger "id" to run the correct sequence from the blueprint input.
+#
 action:
-  - variables:
-      trigger_action: "{{ trigger.event.data.new_state.state }}"
   - choose:
-      # Top Left Button
+      # --- TOP LEFT ---
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'on_top' }}"
+          - condition: trigger
+            id: top_left_pressed
         sequence: !input top_left_pressed
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'brightness_move_up_top' }}"
+          - condition: trigger
+            id: top_left_held
         sequence: !input top_left_held
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'brightness_stop_top' }}"
+          - condition: trigger
+            id: top_left_released
         sequence: !input top_left_released
 
-      # Top Right Button
+      # --- TOP RIGHT ---
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'off_top' }}"
+          - condition: trigger
+            id: top_right_pressed
         sequence: !input top_right_pressed
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'brightness_move_down_top' }}"
+          - condition: trigger
+            id: top_right_held
         sequence: !input top_right_held
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'brightness_stop_top' }}"
+          - condition: trigger
+            id: top_right_released
         sequence: !input top_right_released
 
-      # Bottom Left Button
+      # --- BOTTOM LEFT ---
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'on_bottom' }}"
+          - condition: trigger
+            id: bottom_left_pressed
         sequence: !input bottom_left_pressed
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'brightness_move_up_bottom' }}"
+          - condition: trigger
+            id: bottom_left_held
         sequence: !input bottom_left_held
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'brightness_stop_bottom' }}"
+          - condition: trigger
+            id: bottom_left_released
         sequence: !input bottom_left_released
 
-      # Bottom Right Button
+      # --- BOTTOM RIGHT ---
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'off_bottom' }}"
+          - condition: trigger
+            id: bottom_right_pressed
         sequence: !input bottom_right_pressed
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'brightness_move_down_bottom' }}"
+          - condition: trigger
+            id: bottom_right_held
         sequence: !input bottom_right_held
       - conditions:
-          - condition: template
-            value_template: "{{ trigger_action == 'brightness_stop_bottom' }}"
+          - condition: trigger
+            id: bottom_right_released
         sequence: !input bottom_right_released
+
+    default: []
+
+mode: single
+max_exceeded: silent
